@@ -58,6 +58,8 @@ func QiniuUploadImage(attachments []*discord.MessageAttachment) (newAttachments 
 		}
 
 		newAttachments = append(newAttachments, newAttachment)
+
+		deleteImage(filePath)
 	}
 
 	return
@@ -131,6 +133,18 @@ func downloadImage(url string, filename string) (filePath string, err error) {
 	}
 
 	return
+}
+
+func deleteImage(localFile string) {
+
+	// 检查文件是否存在
+	_, err := os.Stat(localFile)
+	if os.IsNotExist(err) {
+		return
+	}
+
+	// 删除临时文件
+	_ = os.Remove(localFile)
 }
 
 func getUploadToken() (upToken string, err error) {
