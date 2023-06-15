@@ -84,7 +84,7 @@ func UploadImage(localFile string, key string) (ret *storage.PutRet, err error) 
 	formUploader := storage.NewFormUploader(&cfg)
 	ret = &storage.PutRet{}
 	putExtra := storage.PutExtra{}
-
+	fmt.Println(fmt.Printf("upToken %s localFile %s", upToken, localFile))
 	err = formUploader.PutFile(context.Background(), &ret, upToken, key, localFile, &putExtra)
 	if err != nil {
 		return
