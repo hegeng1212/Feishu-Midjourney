@@ -11,6 +11,9 @@ import (
 	"github.com/qiniu/go-sdk/v7/storage"
 	config "midjourney/initialization"
 	"net/url"
+	"path/filepath"
+	"os"
+	"io"
 )
 
 type UploadToken struct {
@@ -28,7 +31,7 @@ func QiniuUploadImage(attachments []*discord.MessageAttachment) (newAttachments 
 		//下载图片到本地
 		filePath, err := downloadImage(attachment.URL, attachment.Filename)
 		if err != nil {
-			return
+			return newAttachments, err
 		}
 
 		parsedURL, err := url.Parse(attachment.URL)
@@ -36,7 +39,7 @@ func QiniuUploadImage(attachments []*discord.MessageAttachment) (newAttachments 
 
 		ret, err := uploadImage(filePath, key)
 		if err != nil {
-			return
+			return newAttachments, err
 		}
 
 		newAttachment := &discord.MessageAttachment{
@@ -47,7 +50,7 @@ func QiniuUploadImage(attachments []*discord.MessageAttachment) (newAttachments 
 			ContentType: attachment.ContentType,
 			Width: attachment.Width,
 			Height: attachment.Height,
-			Size: ret.Fsize,
+			Size: attachment.Size,
 			Ephemeral: attachment.Ephemeral,
 		}
 
@@ -87,6 +90,7 @@ func uploadImage(localFile string, key string) (ret *storage.PutRet, err error) 
 		return
 	}
 	fmt.Println(ret.Key, ret.Hash)
+	return
 }
 
 
