@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/gin-gonic/gin"
+	"github.com/k0kubun/pp/v3"
 )
 
 type RequestTrigger struct {
@@ -20,6 +21,8 @@ func MidjourneyBot(c *gin.Context) {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
+
+	pp.Println(body)
 
 	var err error
 	switch body.Type {

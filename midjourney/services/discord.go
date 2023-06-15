@@ -8,6 +8,8 @@ import (
 	config "midjourney/initialization"
 	"net/http"
 	"path/filepath"
+
+	"github.com/k0kubun/pp/v3"
 )
 
 const (
@@ -45,7 +47,10 @@ func GenerateImage(prompt string) error {
 			Attachments: []ReqCommandAttachments{},
 		},
 	}
-	_, err := request(requestBody, url)
+	r, err := request(requestBody, url)
+	pp.Println(url)
+	pp.Println(requestBody)
+	pp.Println(r)
 	return err
 }
 
@@ -190,6 +195,7 @@ func request(params interface{}, url string) ([]byte, error) {
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", config.GetConfig().DISCORD_USER_TOKEN)
 	client := &http.Client{}
+	pp.Println(req)
 	response, err := client.Do(req)
 	if err != nil {
 		return nil, err

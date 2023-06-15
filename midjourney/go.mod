@@ -3,7 +3,7 @@ module midjourney
 go 1.19
 
 require (
- 	github.com/qiniu/go-sdk/v7 v7.11.1
+ 	github.com/qiniu/go-sdk/v7 v7.16.0
 	github.com/bwmarrin/discordgo v0.27.1
 	github.com/gin-gonic/gin v1.8.2
 	github.com/k0kubun/pp/v3 v3.2.0
