@@ -14,6 +14,7 @@ import (
 	"path/filepath"
 	"os"
 	"io"
+	"strings"
 )
 
 type UploadToken struct {
@@ -35,17 +36,19 @@ func QiniuUploadImage(attachments []*discord.MessageAttachment) (newAttachments 
 		}
 
 		parsedURL, err := url.Parse(attachment.URL)
-		key := parsedURL.Path
+		key := strings.TrimLeft(parsedURL.Path, "/")
 
 		ret, err := UploadImage(filePath, key)
 		if err != nil {
 			return newAttachments, err
 		}
 
+		imagePath := config.GetConfig().QINIU_HOST + "/" + ret.Key
+
 		newAttachment := &discord.MessageAttachment{
 			ID: attachment.ID,
-			URL: ret.Key,
-			ProxyURL: ret.Key,
+			URL: imagePath,
+			ProxyURL: imagePath,
 			Filename: attachment.Filename,
 			ContentType: attachment.ContentType,
 			Width: attachment.Width,
