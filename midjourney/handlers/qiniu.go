@@ -37,7 +37,7 @@ func QiniuUploadImage(attachments []*discord.MessageAttachment) (newAttachments 
 		parsedURL, err := url.Parse(attachment.URL)
 		key := parsedURL.Path
 
-		ret, err := uploadImage(filePath, key)
+		ret, err := UploadImage(filePath, key)
 		if err != nil {
 			return newAttachments, err
 		}
@@ -60,7 +60,7 @@ func QiniuUploadImage(attachments []*discord.MessageAttachment) (newAttachments 
 	return
 }
 
-func uploadImage(localFile string, key string) (ret *storage.PutRet, err error) {
+func UploadImage(localFile string, key string) (ret *storage.PutRet, err error) {
 
 	defer func() {
 		if err != nil {
