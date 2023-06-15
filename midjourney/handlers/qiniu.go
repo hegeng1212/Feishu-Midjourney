@@ -83,7 +83,7 @@ func uploadImage(localFile string, key string) (ret *storage.PutRet, err error) 
 	// 构建表单上传的对象
 	formUploader := storage.NewFormUploader(&cfg)
 	ret = &storage.PutRet{}
-	putExtra := storage.PutExtra{{}}
+	putExtra := storage.PutExtra{}
 
 	err = formUploader.PutFile(context.Background(), &ret, upToken, key, localFile, &putExtra)
 	if err != nil {
@@ -94,7 +94,7 @@ func uploadImage(localFile string, key string) (ret *storage.PutRet, err error) 
 }
 
 
-func downloadImage(url string, filename string) (filePath string, err errror) {
+func downloadImage(url string, filename string) (filePath string, err error) {
 
 	defer func() {
 		if err != nil {
