@@ -41,21 +41,27 @@ func DiscordMsgCreate(s *discord.Session, m *discord.MessageCreate) {
 		return
 	}
 
+	pp.Println("-----------DiscordMsgCreate start------------")
+	pp.Println(m)
+
 	/******** *********/
-	pp.Println(m.Content)
-	pp.Println(m.Attachments)
+	//pp.Println(m.Content)
+	//pp.Println(m.Attachments)
 	/******** *********/
 
 	if strings.Contains(m.Content, "(Waiting to start)") && !strings.Contains(m.Content, "Rerolling **") {
 		trigger(m.Content, FirstTrigger)
+		pp.Println("-----------DiscordMsgCreate end------------")
 		return
 	}
 	for _, attachment := range m.Attachments {
 		if attachment.Width > 0 && attachment.Height > 0 {
 			replay(m)
+			pp.Println("-----------DiscordMsgCreate Attachments end------------")
 			return
 		}
 	}
+	pp.Println("-----------DiscordMsgCreate end------------")
 }
 
 func DiscordMsgUpdate(s *discord.Session, m *discord.MessageUpdate) {
@@ -73,14 +79,20 @@ func DiscordMsgUpdate(s *discord.Session, m *discord.MessageUpdate) {
 		return
 	}
 
+	pp.Println("-----------DiscordMsgUpdate start------------")
+	pp.Println(m)
+
 	if strings.Contains(m.Content, "(Stopped)") {
 		trigger(m.Content, GenerateEditError)
+		pp.Println("-----------DiscordMsgUpdate end------------")
 		return
 	}
 	if len(m.Embeds) > 0 {
 		send(m.Embeds)
+		pp.Println("-----------DiscordMsgUpdate Embeds end------------")
 		return
 	}
+	pp.Println("-----------DiscordMsgUpdate end------------")
 }
 
 type ReqCb struct {
@@ -91,6 +103,14 @@ type ReqCb struct {
 }
 
 func replay(m *discord.MessageCreate) {
+	if len(m.Attachments) > 0 {
+		var err error
+		m.Attachments, err = QiniuUploadImage(m.Attachments)
+		if err != nil {
+			fmt.Println(fmt.Printf("replay QiniuUploadImage Err: %s", err.Error()))
+			return
+		}
+	}
 	body := ReqCb{
 		Discord: m,
 		Type:    GenerateEnd,
@@ -117,7 +137,8 @@ func trigger(content string, t Scene) {
 func request(params interface{}) {
 	data, err := json.Marshal(params)
 
-	// fmt.Println("请求回调接口", string(data))
+	fmt.Println("请求回调接口", string(data))
+	return
 
 	if err != nil {
 		fmt.Println("json marshal error: ", err)

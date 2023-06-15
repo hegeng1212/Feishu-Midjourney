@@ -13,6 +13,12 @@ type Config struct {
 	DISCORD_CHANNEL_ID string
 	CB_URL             string
 	MJ_PORT            string
+	QINIU_HOST         string
+	QINIU_ACCESS_KET   string
+	QINIU_SECRET_KEY   string
+	QINIU_REGION       string
+	QINIU_BUCKET       string
+	TMP_DIR            string
 }
 
 var config *Config
@@ -27,7 +33,13 @@ func LoadConfig(cfg string) *Config {
 		DISCORD_SERVER_ID:  getViperStringValue("DISCORD_SERVER_ID"),
 		DISCORD_CHANNEL_ID: getViperStringValue("DISCORD_CHANNEL_ID"),
 		CB_URL:             getViperStringValue("CB_URL"),
-		MJ_PORT:            getDefaultValue("MJ_PORT", "16008"),
+		MJ_PORT:            getDefaultValue("MJ_PORT", "16007"),
+		QINIU_HOST:         getViperStringValue("QINIU_HOST"),
+		QINIU_ACCESS_KET:   getViperStringValue("QINIU_ACCESS_KET"),
+		QINIU_SECRET_KEY:   getViperStringValue("QINIU_SECRET_KEY"),
+		QINIU_REGION:       getViperStringValue("QINIU_REGION"),
+		QINIU_BUCKET:       getViperStringValue("QINIU_BUCKET"),
+		TMP_DIR:            getViperStringValue("TMP_DIR"),
 	}
 	return config
 }
