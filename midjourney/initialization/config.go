@@ -14,6 +14,7 @@ type Config struct {
 	CB_URL             string
 	MJ_PORT            string
 	QINIU_HOST         string
+	QINIU_CDN_HOST     string
 	QINIU_ACCESS_KET   string
 	QINIU_SECRET_KEY   string
 	QINIU_REGION       string
@@ -35,6 +36,7 @@ func LoadConfig(cfg string) *Config {
 		CB_URL:             getViperStringValue("CB_URL"),
 		MJ_PORT:            getDefaultValue("MJ_PORT", "16007"),
 		QINIU_HOST:         getViperStringValue("QINIU_HOST"),
+		QINIU_CDN_HOST:     getViperStringValue("QINIU_CDN_HOST"),
 		QINIU_ACCESS_KET:   getViperStringValue("QINIU_ACCESS_KET"),
 		QINIU_SECRET_KEY:   getViperStringValue("QINIU_SECRET_KEY"),
 		QINIU_REGION:       getViperStringValue("QINIU_REGION"),

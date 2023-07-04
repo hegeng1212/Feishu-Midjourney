@@ -1,25 +1,25 @@
 package handlers
 
 import (
+	"context"
 	"errors"
 	"fmt"
-	"time"
-	"context"
-	"net/http"
 	discord "github.com/bwmarrin/discordgo"
 	"github.com/qiniu/go-sdk/v7/auth/qbox"
 	"github.com/qiniu/go-sdk/v7/storage"
-	config "midjourney/initialization"
-	"net/url"
-	"path/filepath"
-	"os"
 	"io"
+	config "midjourney/initialization"
+	"net/http"
+	"net/url"
+	"os"
+	"path/filepath"
 	"strings"
+	"time"
 )
 
 type UploadToken struct {
-	Token        string
-	ExpireTs     int64
+	Token    string
+	ExpireTs int64
 }
 
 var uploadToken *UploadToken = &UploadToken{}
@@ -30,31 +30,35 @@ func QiniuUploadImage(attachments []*discord.MessageAttachment) (newAttachments 
 
 	for _, attachment := range attachments {
 		//下载图片到本地
+		fmt.Println("图片下载开始当前本地时间：", time.Now())
 		filePath, err := downloadImage(attachment.URL, attachment.Filename)
 		if err != nil {
 			return newAttachments, err
 		}
+		fmt.Println("图片下载结束当前本地时间：", time.Now())
 
 		parsedURL, err := url.Parse(attachment.URL)
 		key := strings.TrimLeft(parsedURL.Path, "/")
 
+		fmt.Println("图片上传开始当前本地时间：", time.Now())
 		ret, err := UploadImage(filePath, key)
+		fmt.Println("图片上传结束当前本地时间：", time.Now())
 		if err != nil {
 			return newAttachments, err
 		}
 
-		imagePath := config.GetConfig().QINIU_HOST + "/" + ret.Key
+		imagePath := config.GetConfig().QINIU_CDN_HOST + "/" + ret.Key
 
 		newAttachment := &discord.MessageAttachment{
-			ID: attachment.ID,
-			URL: imagePath,
-			ProxyURL: imagePath,
-			Filename: attachment.Filename,
+			ID:          attachment.ID,
+			URL:         imagePath,
+			ProxyURL:    imagePath,
+			Filename:    attachment.Filename,
 			ContentType: attachment.ContentType,
-			Width: attachment.Width,
-			Height: attachment.Height,
-			Size: attachment.Size,
-			Ephemeral: attachment.Ephemeral,
+			Width:       attachment.Width,
+			Height:      attachment.Height,
+			Size:        attachment.Size,
+			Ephemeral:   attachment.Ephemeral,
 		}
 
 		newAttachments = append(newAttachments, newAttachment)
@@ -96,7 +100,6 @@ func UploadImage(localFile string, key string) (ret *storage.PutRet, err error) 
 	fmt.Println(ret.Key, ret.Hash)
 	return
 }
-
 
 func downloadImage(url string, filename string) (filePath string, err error) {
 
@@ -159,13 +162,13 @@ func getUploadToken() (upToken string, err error) {
 		}
 	}()
 
-	if uploadToken.Token != "" && uploadToken.ExpireTs > (time.Now().Unix() + 300) {
+	if uploadToken.Token != "" && uploadToken.ExpireTs > (time.Now().Unix()+300) {
 		upToken = uploadToken.Token
 		return
 	}
 
 	putPolicy := storage.PutPolicy{
-		Scope: config.GetConfig().QINIU_BUCKET,
+		Scope:      config.GetConfig().QINIU_BUCKET,
 		ReturnBody: `{"key":"$(key)","hash":"$(etag)","fsize":$(fsize),"bucket":"$(bucket)","name":"$(x:name)"}`,
 	}
 
@@ -179,7 +182,7 @@ func getUploadToken() (upToken string, err error) {
 	}
 
 	uploadToken = &UploadToken{
-		Token: upToken,
+		Token:    upToken,
 		ExpireTs: time.Now().Unix() + 3300,
 	}
 

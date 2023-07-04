@@ -138,7 +138,6 @@ func request(params interface{}) {
 	data, err := json.Marshal(params)
 
 	fmt.Println("请求回调接口", string(data))
-	return
 
 	if err != nil {
 		fmt.Println("json marshal error: ", err)

@@ -3,10 +3,10 @@ module midjourney
 go 1.19
 
 require (
- 	github.com/qiniu/go-sdk/v7 v7.16.0
 	github.com/bwmarrin/discordgo v0.27.1
 	github.com/gin-gonic/gin v1.8.2
 	github.com/k0kubun/pp/v3 v3.2.0
+	github.com/qiniu/go-sdk/v7 v7.16.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.14.0
 )
@@ -37,6 +37,7 @@ require (
 	github.com/ugorji/go/codec v1.2.8 // indirect
 	golang.org/x/crypto v0.5.0 // indirect
 	golang.org/x/net v0.8.0 // indirect
+	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.6.0 // indirect
 	golang.org/x/text v0.8.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
