@@ -41,13 +41,13 @@ func QiniuUploadImage(attachments []*discord.MessageAttachment) (newAttachments 
 		key := strings.TrimLeft(parsedURL.Path, "/")
 
 		fmt.Println("图片上传开始当前本地时间：", time.Now())
-		ret, err := UploadImage(filePath, key)
+		err = doQiniuUploadImage(filePath, key)
 		fmt.Println("图片上传结束当前本地时间：", time.Now())
 		if err != nil {
 			return newAttachments, err
 		}
 
-		imagePath := config.GetConfig().QINIU_CDN_HOST + "/" + ret.Key
+		imagePath := config.GetConfig().QINIU_CDN_HOST + "/" + key
 
 		newAttachment := &discord.MessageAttachment{
 			ID:          attachment.ID,
@@ -69,11 +69,11 @@ func QiniuUploadImage(attachments []*discord.MessageAttachment) (newAttachments 
 	return
 }
 
-func UploadImage(localFile string, key string) (ret *storage.PutRet, err error) {
+func doQiniuUploadImage(localFile string, key string) (err error) {
 
 	defer func() {
 		if err != nil {
-			fmt.Println(fmt.Printf("uploadImage Err: %s", err.Error()))
+			fmt.Println(fmt.Printf("doQiniuUploadImage Err: %s", err.Error()))
 		}
 	}()
 
@@ -91,7 +91,7 @@ func UploadImage(localFile string, key string) (ret *storage.PutRet, err error) 
 	cfg.UseCdnDomains = false
 	// 构建表单上传的对象
 	formUploader := storage.NewFormUploader(&cfg)
-	ret = &storage.PutRet{}
+	ret := &storage.PutRet{}
 	putExtra := storage.PutExtra{}
 	err = formUploader.PutFile(context.Background(), &ret, upToken, key, localFile, &putExtra)
 	if err != nil {

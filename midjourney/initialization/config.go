@@ -19,6 +19,10 @@ type Config struct {
 	QINIU_SECRET_KEY   string
 	QINIU_REGION       string
 	QINIU_BUCKET       string
+	ALI_OSS_HOST       string
+	ALI_OSS_ACCESS_KET string
+	ALI_OSS_SECRET_KET string
+	ALI_OSS_BUCKET     string
 	TMP_DIR            string
 }
 
@@ -41,6 +45,10 @@ func LoadConfig(cfg string) *Config {
 		QINIU_SECRET_KEY:   getViperStringValue("QINIU_SECRET_KEY"),
 		QINIU_REGION:       getViperStringValue("QINIU_REGION"),
 		QINIU_BUCKET:       getViperStringValue("QINIU_BUCKET"),
+		ALI_OSS_HOST:       getViperStringValue("ALI_OSS_HOST"),
+		ALI_OSS_ACCESS_KET: getViperStringValue("ALI_OSS_ACCESS_KET"),
+		ALI_OSS_SECRET_KET: getViperStringValue("ALI_OSS_SECRET_KET"),
+		ALI_OSS_BUCKET:     getViperStringValue("ALI_OSS_BUCKET"),
 		TMP_DIR:            getViperStringValue("TMP_DIR"),
 	}
 	return config
