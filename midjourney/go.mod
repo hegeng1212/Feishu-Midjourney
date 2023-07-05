@@ -4,7 +4,6 @@ go 1.19
 
 require (
 	github.com/bwmarrin/discordgo v0.27.1
-	github.com/aliyun/aliyun-oss-go-sdk/oss v2.2.7
 	github.com/gin-gonic/gin v1.8.2
 	github.com/k0kubun/pp/v3 v3.2.0
 	github.com/qiniu/go-sdk/v7 v7.16.0
@@ -13,6 +12,7 @@ require (
 )
 
 require (
+	github.com/aliyun/aliyun-oss-go-sdk v2.2.7+incompatible // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
@@ -41,6 +41,7 @@ require (
 	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.6.0 // indirect
 	golang.org/x/text v0.8.0 // indirect
+	golang.org/x/time v0.0.0-20220609170525-579cf78fd858 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
