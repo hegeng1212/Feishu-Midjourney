@@ -33,7 +33,7 @@ func AliUploadImage(attachments []*discord.MessageAttachment) (newAttachments []
 			return newAttachments, err
 		}
 
-		imagePath := config.GetConfig().ALI_OSS_HOST + "/" + key
+		imagePath := config.GetConfig().ALI_OSS_ACCESS_HOST + "/" + key
 
 		newAttachment := &discord.MessageAttachment{
 			ID:          attachment.ID,
@@ -69,6 +69,16 @@ func doAliUploadImage(localFile string, key string) (err error) {
 	bucketKey := config.GetConfig().ALI_OSS_BUCKET
 
 	client, err := oss.New(host, accessKey, secretKey)
+	if err != nil {
+		return
+	}
+
+	// 开启Bucket的传输加速状态。
+	// Enabled表示传输加速的开关，取值为true表示开启传输加速，取值为false表示关闭传输加速。
+	accConfig := oss.TransferAccConfiguration{}
+	accConfig.Enabled = true
+
+	err = client.SetBucketTransferAcc(bucketKey, accConfig)
 	if err != nil {
 		return
 	}

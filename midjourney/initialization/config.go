@@ -7,23 +7,24 @@ import (
 )
 
 type Config struct {
-	DISCORD_USER_TOKEN string
-	DISCORD_BOT_TOKEN  string
-	DISCORD_SERVER_ID  string
-	DISCORD_CHANNEL_ID string
-	CB_URL             string
-	MJ_PORT            string
-	QINIU_HOST         string
-	QINIU_CDN_HOST     string
-	QINIU_ACCESS_KET   string
-	QINIU_SECRET_KEY   string
-	QINIU_REGION       string
-	QINIU_BUCKET       string
-	ALI_OSS_HOST       string
-	ALI_OSS_ACCESS_KET string
-	ALI_OSS_SECRET_KET string
-	ALI_OSS_BUCKET     string
-	TMP_DIR            string
+	DISCORD_USER_TOKEN  string
+	DISCORD_BOT_TOKEN   string
+	DISCORD_SERVER_ID   string
+	DISCORD_CHANNEL_ID  string
+	CB_URL              string
+	MJ_PORT             string
+	QINIU_HOST          string
+	QINIU_CDN_HOST      string
+	QINIU_ACCESS_KET    string
+	QINIU_SECRET_KEY    string
+	QINIU_REGION        string
+	QINIU_BUCKET        string
+	ALI_OSS_HOST        string
+	ALI_OSS_ACCESS_KET  string
+	ALI_OSS_SECRET_KET  string
+	ALI_OSS_BUCKET      string
+	ALI_OSS_ACCESS_HOST string
+	TMP_DIR             string
 }
 
 var config *Config
@@ -49,6 +50,7 @@ func LoadConfig(cfg string) *Config {
 		ALI_OSS_ACCESS_KET: getViperStringValue("ALI_OSS_ACCESS_KET"),
 		ALI_OSS_SECRET_KET: getViperStringValue("ALI_OSS_SECRET_KET"),
 		ALI_OSS_BUCKET:     getViperStringValue("ALI_OSS_BUCKET"),
+		ALI_OSS_ACCESS_HOST: getViperStringValue("ALI_OSS_ACCESS_HOST"),
 		TMP_DIR:            getViperStringValue("TMP_DIR"),
 	}
 	return config

@@ -105,7 +105,7 @@ type ReqCb struct {
 func replay(m *discord.MessageCreate) {
 	if len(m.Attachments) > 0 {
 		var err error
-		m.Attachments, err = QiniuUploadImage(m.Attachments)
+		m.Attachments, err = AliUploadImage(m.Attachments)
 		if err != nil {
 			fmt.Println(fmt.Printf("replay QiniuUploadImage Err: %s", err.Error()))
 			return
