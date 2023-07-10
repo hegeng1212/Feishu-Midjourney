@@ -13,7 +13,7 @@ type RequestTrigger struct {
 	MsgHash      string `json:"msgHash,omitempty"`
 	Prompt       string `json:"prompt,omitempty"`
 	Index        int64  `json:"index,omitempty"`
-	SubType      string `json:"sub_type,omitempty"`
+	SubType      string `json:"subType,omitempty"`
 }
 
 func MidjourneyBot(c *gin.Context) {
