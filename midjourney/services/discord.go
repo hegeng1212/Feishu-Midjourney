@@ -15,9 +15,11 @@ import (
 const (
 	url             = "https://discord.com/api/v9/interactions"
 	uploadUrlFormat = "https://discord.com/api/v9/channels/%s/attachments"
+	DiscordId       = "938956540159881230"
 	appId           = "936929561302675456"
 	//Version         = "1077969938624553050"
 	Version         = "1118961510123847772"
+	SessionId       = "cb06f61453064c0983f2adae2a88c223"
 )
 
 func GenerateImage(prompt string) error {
@@ -26,16 +28,16 @@ func GenerateImage(prompt string) error {
 		GuildID:       config.GetConfig().DISCORD_SERVER_ID,
 		ChannelID:     config.GetConfig().DISCORD_CHANNEL_ID,
 		ApplicationId: appId,
-		SessionId:     "cb06f61453064c0983f2adae2a88c223",
+		SessionId:     SessionId,
 		Data: DSCommand{
 			Version: Version,
-			Id:      "938956540159881230",
+			Id:      DiscordId,
 			Name:    "imagine",
 			Type:    1,
 			Options: []DSOption{{Type: 3, Name: "prompt", Value: prompt}},
 			ApplicationCommand: DSApplicationCommand{
 				Id:                       "938956540159881230",
-				ApplicationId:            "936929561302675456",
+				ApplicationId:            appId,
 				Version:                  Version,
 				DefaultPermission:        true,
 				DefaultMemberPermissions: nil,
@@ -64,7 +66,7 @@ func Upscale(index int64, messageId string, messageHash string) error {
 		MessageFlags:  0,
 		MessageId:     messageId,
 		ApplicationId: appId,
-		SessionId:     "45bc04dd4da37141a5f73dfbfaf5bdcf",
+		SessionId:     SessionId,
 		Data: UpscaleData{
 			ComponentType: 2,
 			CustomId:      fmt.Sprintf("MJ::JOB::upsample::%d::%s", index, messageHash),
@@ -82,7 +84,7 @@ func MaxUpscale(messageId string, messageHash string) error {
 		MessageFlags:  0,
 		MessageId:     messageId,
 		ApplicationId: appId,
-		SessionId:     "1f3dbdf09efdf93d81a3a6420882c92c",
+		SessionId:     SessionId,
 		Data: UpscaleData{
 			ComponentType: 2,
 			CustomId:      fmt.Sprintf("MJ::JOB::variation::1::%s::SOLO", messageHash),
@@ -105,7 +107,7 @@ func Variate(index int64, messageId string, messageHash string) error {
 		MessageFlags:  0,
 		MessageId:     messageId,
 		ApplicationId: appId,
-		SessionId:     "45bc04dd4da37141a5f73dfbfaf5bdcf",
+		SessionId:     SessionId,
 		Data: UpscaleData{
 			ComponentType: 2,
 			CustomId:      fmt.Sprintf("MJ::JOB::variation::%d::%s", index, messageHash),
@@ -123,7 +125,7 @@ func Reset(messageId string, messageHash string) error {
 		MessageFlags:  0,
 		MessageId:     messageId,
 		ApplicationId: appId,
-		SessionId:     "45bc04dd4da37141a5f73dfbfaf5bdcf",
+		SessionId:     SessionId,
 		Data: UpscaleData{
 			ComponentType: 2,
 			CustomId:      fmt.Sprintf("MJ::JOB::reroll::0::%s::SOLO", messageHash),
@@ -138,11 +140,11 @@ func Describe(uploadName string) error {
 		Type:          2,
 		GuildID:       config.GetConfig().DISCORD_SERVER_ID,
 		ChannelID:     config.GetConfig().DISCORD_CHANNEL_ID,
-		ApplicationId: "936929561302675456",
-		SessionId:     "0033db636f7ce1a951e54cdac7044de3",
+		ApplicationId: appId,
+		SessionId:     SessionId,
 		Data: DSCommand{
-			Version: "1092492867185950853",
-			Id:      "1092492867185950852",
+			Version: Version,
+			Id:      DiscordId,
 			Name:    "describe",
 			Type:    1,
 			Options: []DSOption{{Type: 11, Name: "image", Value: 0}},
