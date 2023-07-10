@@ -76,7 +76,16 @@ func Upscale(index int64, messageId string, messageHash string) error {
 	return err
 }
 
-func MaxUpscale(messageId string, messageHash string) error {
+func MaxUpscale(messageId string, messageHash string, subType string) error {
+
+	customIdTemplate := "MJ::JOB::variation::1::%s::SOLO"
+	switch subType {
+	case "high":
+		customIdTemplate = "MJ::JOB::high_variation::1::%s::SOLO"
+	case "low":
+		customIdTemplate = "MJ::JOB::low_variation::1::%s::SOLO"
+	}
+
 	requestBody := ReqUpscaleDiscord{
 		Type:          3,
 		GuildId:       config.GetConfig().DISCORD_SERVER_ID,
@@ -87,13 +96,73 @@ func MaxUpscale(messageId string, messageHash string) error {
 		SessionId:     SessionId,
 		Data: UpscaleData{
 			ComponentType: 2,
-			CustomId:      fmt.Sprintf("MJ::JOB::variation::1::%s::SOLO", messageHash),
+			CustomId:      fmt.Sprintf(customIdTemplate, messageHash),
 		},
 	}
 
 	data, _ := json.Marshal(requestBody)
 
 	fmt.Println("max upscale request body: ", string(data))
+
+	_, err := request(requestBody, url)
+	return err
+}
+
+func ZoomOut(messageId string, messageHash string, subType string) error {
+	requestBody := ReqUpscaleDiscord{
+		Type:          3,
+		GuildId:       config.GetConfig().DISCORD_SERVER_ID,
+		ChannelId:     config.GetConfig().DISCORD_CHANNEL_ID,
+		MessageFlags:  0,
+		MessageId:     messageId,
+		ApplicationId: appId,
+		SessionId:     SessionId,
+		Data: UpscaleData{
+			ComponentType: 2,
+			CustomId:      fmt.Sprintf("MJ::Outpaint::%s::1::%s::SOLO", subType, messageHash),
+		},
+	}
+
+	data, _ := json.Marshal(requestBody)
+
+	fmt.Println("zoom out request body: ", string(data))
+
+	_, err := request(requestBody, url)
+	return err
+}
+
+func Pan(messageId string, messageHash string, subType string) error {
+
+	customIdTemplate := "MJ::JOB::pan_left::1::%s::SOLO"
+	switch subType {
+	case "left":
+		customIdTemplate = "MJ::JOB::pan_left::1::%s::SOLO"
+	case "right":
+		customIdTemplate = "MJ::JOB::pan_right::1::%s::SOLO"
+	case "up":
+		customIdTemplate = "MJ::JOB::pan_up::1::%s::SOLO"
+	case "down":
+		customIdTemplate = "MJ::JOB::pan_down::1::%s::SOLO"
+	}
+
+
+	requestBody := ReqUpscaleDiscord{
+		Type:          3,
+		GuildId:       config.GetConfig().DISCORD_SERVER_ID,
+		ChannelId:     config.GetConfig().DISCORD_CHANNEL_ID,
+		MessageFlags:  0,
+		MessageId:     messageId,
+		ApplicationId: appId,
+		SessionId:     SessionId,
+		Data: UpscaleData{
+			ComponentType: 2,
+			CustomId:      fmt.Sprintf(customIdTemplate, messageHash),
+		},
+	}
+
+	data, _ := json.Marshal(requestBody)
+
+	fmt.Println("pan request body: ", string(data))
 
 	_, err := request(requestBody, url)
 	return err

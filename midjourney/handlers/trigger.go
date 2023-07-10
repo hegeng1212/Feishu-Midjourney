@@ -13,6 +13,7 @@ type RequestTrigger struct {
 	MsgHash      string `json:"msgHash,omitempty"`
 	Prompt       string `json:"prompt,omitempty"`
 	Index        int64  `json:"index,omitempty"`
+	SubType      string `json:"sub_type,omitempty"`
 }
 
 func MidjourneyBot(c *gin.Context) {
@@ -33,7 +34,11 @@ func MidjourneyBot(c *gin.Context) {
 	case "variation":
 		err = ImageVariation(body.Index, body.DiscordMsgId, body.MsgHash)
 	case "maxUpscale":
-		err = ImageMaxUpscale(body.DiscordMsgId, body.MsgHash)
+		err = ImageMaxUpscale(body.DiscordMsgId, body.MsgHash, body.SubType)
+	case "zoomout":
+		err = ImageZoomOut(body.DiscordMsgId, body.MsgHash, body.SubType)
+	case "pan":
+		err = ImagePan(body.DiscordMsgId, body.MsgHash, body.SubType)
 	case "reset":
 		err = ImageReset(body.DiscordMsgId, body.MsgHash)
 	case "describe":

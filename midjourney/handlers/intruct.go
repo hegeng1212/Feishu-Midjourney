@@ -19,8 +19,18 @@ func ImageVariation(index int64, discordMsgId string, msgHash string) error {
 	return err
 }
 
-func ImageMaxUpscale(discordMsgId string, msgHash string) error {
-	err := services.MaxUpscale(discordMsgId, msgHash)
+func ImageMaxUpscale(discordMsgId string, msgHash string, subType string) error {
+	err := services.MaxUpscale(discordMsgId, msgHash, subType)
+	return err
+}
+
+func ImageZoomOut(discordMsgId string, msgHash string, subType string) error {
+	err := services.ZoomOut(discordMsgId, msgHash, subType)
+	return err
+}
+
+func ImagePan(discordMsgId string, msgHash string, subType string) error {
+	err := services.Pan(discordMsgId, msgHash, subType)
 	return err
 }
 
