@@ -16,11 +16,15 @@ const (
 	url             = "https://discord.com/api/v9/interactions"
 	uploadUrlFormat = "https://discord.com/api/v9/channels/%s/attachments"
 	DiscordId       = "938956540159881230"
-	appId           = "936929561302675456"
+	appId           = "936929561302675456"//"1117660105962438706"
 	//Version         = "1077969938624553050"
-	Version         = "1118961510123847772"
-	SessionId       = "cb06f61453064c0983f2adae2a88c223"
+	Version         = "1237876415471554623"//"1166847114203123795"
+	SessionId       = "11c73404e48de26b7c76a31349c556c2"//"cb06f61453064c0983f2adae2a88c223"
 )
+
+type ImageResponse struct {
+	Message string `json:"message"`
+}
 
 func GenerateImage(prompt string) error {
 	requestBody := ReqTriggerDiscord{
@@ -36,7 +40,7 @@ func GenerateImage(prompt string) error {
 			Type:    1,
 			Options: []DSOption{{Type: 3, Name: "prompt", Value: prompt}},
 			ApplicationCommand: DSApplicationCommand{
-				Id:                       "938956540159881230",
+				Id:                       DiscordId,
 				ApplicationId:            appId,
 				Version:                  Version,
 				DefaultPermission:        true,
@@ -44,7 +48,7 @@ func GenerateImage(prompt string) error {
 				Type:                     1,
 				Nsfw:                     false,
 				Name:                     "imagine",
-				Description:              "Lucky you!",
+				Description:              "Create images with Midjourney",
 				DmPermission:             true,
 				Options:                  []DSCommandOption{{Type: 3, Name: "prompt", Description: "The prompt to imagine", Required: true}},
 			},
@@ -261,13 +265,20 @@ func request(params interface{}, url string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+        pp.Println(string(requestData))
+        pp.Println("debug")
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(requestData))
 	if err != nil {
 		return nil, err
 	}
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", config.GetConfig().DISCORD_USER_TOKEN)
-	client := &http.Client{}
+	req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36")
+        //req.Header.Set("Cookie", "__dcfduid=7cb3da50041511eea7fad967352beea2; __sdcfduid=7cb3da51041511eea7fad967352beea26bbdf4f8a8d663056ff30d65e83ec6c0109357486cf86b2a6d7175262ddf7b3c; _ga=GA1.1.208433333.1688970170; OptanonConsent=isIABGlobal=false&datestamp=Wed+Dec+06+2023+10%3A01%3A55+GMT%2B0800+(%E4%B8%AD%E5%9B%BD%E6%A0%87%E5%87%86%E6%97%B6%E9%97%B4)&version=6.33.0&hosts=&landingPath=https%3A%2F%2Fdiscord.com%2F&groups=C0001%3A1%2CC0002%3A1%2CC0003%3A1; _ga_Q149DFWHT7=GS1.1.1701828115.3.0.1701828117.0.0.0; __cfruid=8c99b1775cdeaf56378539ad5b7b77fb65a0df92-1712055442; _cfuvid=1lwU0exUaUGnOFJp5QC4qxLzYmrzvZ5Bmd.Ffwzx7j8-1712055442149-0.0.1.1-604800000; _ga_5CWMJQ1S0X=GS1.1.1712055443.1.0.1712055443.0.0.0; cf_clearance=uEVh0VLr_w_Gn4x87DJBKVpwh0DL08GnO3A0PAmoCUw-1712055444-1.0.1.1-.R7pS_R7610OBp8qp98mpqEJndtfyTxL2CYukzT4GbssalHZ_iMFJbRRpGloxOszYzXEVPUD2c9VzZl..Dym5A")
+        //req.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7")
+        //req.Header.Set("Accept-Language", "us-EN,us;q=0.9")
+
+        client := &http.Client{}
 	pp.Println(req)
 	response, err := client.Do(req)
 	if err != nil {
@@ -276,5 +287,17 @@ func request(params interface{}, url string) ([]byte, error) {
 	defer response.Body.Close()
 	bod, respErr := ioutil.ReadAll(response.Body)
 	fmt.Println("response:", string(bod), respErr, response.Status, url)
+
+	if response.StatusCode != http.StatusNoContent && response.StatusCode != http.StatusOK {
+		resp := &ImageResponse{}
+		err = json.Unmarshal(bod, &resp)
+		if err != nil {
+			return bod, err
+		}
+		err = fmt.Errorf("statusCode: %d, err: %s", response.StatusCode, resp.Message)
+
+		return bod, err
+	}
+
 	return bod, respErr
 }
